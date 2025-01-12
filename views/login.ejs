@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona Powitalna</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>Moja Aplikacja</h1>
+    </div>
+    <div class="center-box">
+        <form action="/login" method="POST">
+            <input type="email" id="email" name="email" placeholder="Adres e-mail" required>
+            <input type="password" id="password" name="password" placeholder="Hasło" required>
+            <button type="submit" class="login-btn">Zaloguj się</button>
+            <button type="button" class="register-btn" onclick="location.href='/register'">Zarejestruj się</button>
+        </form>
+    </div>
+    <!-- Flash messages -->
+    <div id="flash-messages">
+        <% if (successMessage && successMessage.length > 0) { %>
+            <div class="flash-success"><%= successMessage %></div>
+        <% } %>
+        <% if (errorMessage && errorMessage.length > 0) { %>
+            <div class="flash-error"><%= errorMessage %></div>
+        <% } %>
+    </div>
+
+    <script>
+        // Ukryj wiadomości po 10 sekundach
+        setTimeout(() => {
+            const messages = document.getElementById('flash-messages');
+            if (messages) messages.style.display = 'none';
+        }, 10000);
+    </script>
+</body>
+</html>
