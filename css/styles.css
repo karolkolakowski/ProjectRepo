@@ -1,0 +1,36 @@
+/* Ogólne ustawienia */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #add8e6, #0000ff); /* Gradient z jasnego niebieskiego na ciemny */
+    color: white;
+}
+
+/* Styl belki na górze */
+.navbar {
+    background-color: #000080; /* Granatowy */
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 24px;
+    color: white;
+}
+
+/* Główna treść strony */
+.content {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.content h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.content p {
+    font-size: 18px;
+}
