@@ -22,12 +22,19 @@ router.post('/', async (req, res) => {
 
         const user = userResult.rows[0];
 
+        // Sprawdź, czy e-mail jest potwierdzony
+        if (user.email_confirmed !== 1) {
+            req.flash('error', 'Adres e-mail nie został potwierdzony.');
+            return res.redirect('/login');
+        }
+
         // Sprawdź poprawność hasła
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (isPasswordValid) {
-            req.flash('success', 'Poprawne');
-            res.redirect('/login');
+            // Przekierowanie na nową stronę po zalogowaniu
+            req.session.user = { id: user.user_id, email: user.email }; // Zapisanie danych użytkownika w sesji
+            res.redirect('/dashboard');
         } else {
             req.flash('error', 'Niewłaściwe hasło lub email');
             res.redirect('/login');
@@ -37,6 +44,16 @@ router.post('/', async (req, res) => {
         req.flash('error', 'Wystąpił błąd serwera. Spróbuj ponownie.');
         res.redirect('/login');
     }
+});
+
+// Nowa trasa po zalogowaniu
+router.get('/dashboard', (req, res) => {
+    if (!req.session.user) {
+        req.flash('error', 'Musisz się najpierw zalogować.');
+        return res.redirect('/login');
+    }
+
+    res.render('dashboard', { user: req.session.user });
 });
 
 module.exports = router;
