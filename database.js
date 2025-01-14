@@ -1,7 +1,6 @@
 const { Pool } = require('pg');
 require('dotenv').config(); // Wczytaj zmienne środowiskowe z pliku .env
 
-console.log('DB_PASSWORD:', process.env.DB_PASSWORD); // Sprawdź, czy hasło jest poprawnie wczytane
 
 const pool = new Pool({
     user: process.env.DB_USER,

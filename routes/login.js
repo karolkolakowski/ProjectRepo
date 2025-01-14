@@ -32,8 +32,14 @@ router.post('/', async (req, res) => {
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (isPasswordValid) {
+            // Zapisz sesję użytkownika w tabeli user_session
+            await pool.query(
+                'INSERT INTO user_session (user_id, login_datetime) VALUES ($1, CURRENT_TIMESTAMP)',
+                [user.user_id]
+            );
+
             // Przekierowanie na nową stronę po zalogowaniu
-            req.session.user = { id: user.user_id, email: user.email }; // Zapisanie danych użytkownika w sesji
+            req.session.user = { id: user.user_id, email: user.email, first_name: user.first_name }; // Zapisanie danych użytkownika w sesji
             res.redirect('/dashboard');
         } else {
             req.flash('error', 'Niewłaściwe hasło lub email');
@@ -47,13 +53,43 @@ router.post('/', async (req, res) => {
 });
 
 // Nowa trasa po zalogowaniu
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', async (req, res) => {
     if (!req.session.user) {
         req.flash('error', 'Musisz się najpierw zalogować.');
         return res.redirect('/login');
     }
 
-    res.render('dashboard', { user: req.session.user });
+    try {
+        // Pobierz imię użytkownika z bazy danych
+        const userResult = await pool.query('SELECT first_name FROM users WHERE user_id = $1', [req.session.user.id]);
+
+        if (userResult.rows.length === 0) {
+            req.flash('error', 'Nie znaleziono użytkownika.');
+            return res.redirect('/login');
+        }
+
+        const user = userResult.rows[0];
+        res.render('dashboard', { user });
+    } catch (error) {
+        console.error('Błąd serwera:', error);
+        req.flash('error', 'Wystąpił błąd serwera. Spróbuj ponownie.');
+        res.redirect('/login');
+    }
+});
+
+// Trasa wylogowania
+router.get('/logout', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Błąd przy wylogowywaniu:', err);
+            return res.redirect('/dashboard');
+        }
+        res.redirect('/login');
+    });
 });
 
 module.exports = router;

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 
-// Trasa dashboard
 router.get('/', async (req, res) => {
     if (!req.session.user) {
         req.flash('error', 'Musisz się najpierw zalogować.');
@@ -24,6 +23,32 @@ router.get('/', async (req, res) => {
         console.error('Błąd serwera:', error);
         req.flash('error', 'Wystąpił błąd serwera. Spróbuj ponownie.');
         res.redirect('/login');
+    }
+});
+
+router.get('/logout', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    try {
+        // Zaktualizuj logout_datetime w tabeli user_session
+        await pool.query(
+            'UPDATE user_session SET logout_datetime = CURRENT_TIMESTAMP WHERE user_id = $1 AND logout_datetime IS NULL',
+            [req.session.user.id]
+        );
+
+        // Zniszcz sesję
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Błąd przy wylogowywaniu:', err);
+                return res.redirect('/dashboard');
+            }
+            res.redirect('/login');
+        });
+    } catch (error) {
+        console.error('Błąd serwera:', error);
+        res.redirect('/dashboard');
     }
 });
 
