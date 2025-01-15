@@ -6,9 +6,9 @@ body {
 .navbar {
     width: 100%;
     height: 60px;
-    background-color: gray;
+    background-color: rgb(23, 20, 165);
     display: flex;
-    align-items: center;
+    align-items: right;
     justify-content: space-between;
     padding: 0 20px;
     box-sizing: border-box;
@@ -35,9 +35,9 @@ body {
 .menu {
     position: absolute;
     top: 60px;
-    right: 50px;
-    width: 200px;
-    background-color: gray;
+    right: 0px;
+    width: 300px;
+    background-color: rgb(35, 66, 202);
     border: 1px solid #ddd;
     display: none;
     flex-direction: column;
