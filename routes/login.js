@@ -22,11 +22,6 @@ router.post('/', async (req, res) => {
 
         const user = userResult.rows[0];
 
-        // Sprawdź, czy e-mail jest potwierdzony
-        if (user.email_confirmed !== 1) {
-            req.flash('error', 'Adres e-mail nie został potwierdzony.');
-            return res.redirect('/login');
-        }
 
         // Sprawdź poprawność hasła
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -52,44 +47,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Nowa trasa po zalogowaniu
-router.get('/dashboard', async (req, res) => {
-    if (!req.session.user) {
-        req.flash('error', 'Musisz się najpierw zalogować.');
-        return res.redirect('/login');
-    }
 
-    try {
-        // Pobierz imię użytkownika z bazy danych
-        const userResult = await pool.query('SELECT first_name FROM users WHERE user_id = $1', [req.session.user.id]);
-
-        if (userResult.rows.length === 0) {
-            req.flash('error', 'Nie znaleziono użytkownika.');
-            return res.redirect('/login');
-        }
-
-        const user = userResult.rows[0];
-        res.render('dashboard', { user });
-    } catch (error) {
-        console.error('Błąd serwera:', error);
-        req.flash('error', 'Wystąpił błąd serwera. Spróbuj ponownie.');
-        res.redirect('/login');
-    }
-});
-
-// Trasa wylogowania
-router.get('/logout', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Błąd przy wylogowywaniu:', err);
-            return res.redirect('/dashboard');
-        }
-        res.redirect('/login');
-    });
-});
 
 module.exports = router;

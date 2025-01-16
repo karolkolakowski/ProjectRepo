@@ -51,5 +51,19 @@ router.get('/logout', async (req, res) => {
         res.redirect('/dashboard');
     }
 });
+router.get('/game1', async (req, res) => {
+    if (!req.session.user) {
+        req.flash('error', 'Musisz się najpierw zalogować.');
+        return res.redirect('/login');
+    }
+
+    try {
+        res.render('game1', { user: req.session.user });
+    } catch (error) {
+        console.error('Błąd serwera:', error);
+        req.flash('error', 'Wystąpił błąd serwera. Spróbuj ponownie.');
+        res.redirect('/dashboard');
+    }
+});
 
 module.exports = router;

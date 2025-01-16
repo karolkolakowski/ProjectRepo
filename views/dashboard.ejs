@@ -20,7 +20,11 @@
     </div>
     <div class="content">
         <% for (let i = 0; i < 16; i++) { %>
-        <div class="grid-item"></div>
+        <div class="grid-item">
+            <% if (i === 0) { %>
+                <a href="/dashboard/game1" style="display: block; width: 100%; height: 100%;"></a>
+            <% } %>
+        </div>
         <% } %>
     </div>
 

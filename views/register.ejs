@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejestracja</title>
-    <!-- Poprawiona ścieżka do pliku CSS -->
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -29,7 +28,7 @@
             <div class="flash-success"><%= successMessage %></div>
         <% } %>
         <% if (errorMessage && errorMessage.length > 0) { %>
-            <div class="flash-error"><%- errorMessage %></div>
+            <div class="flash-error"><%= errorMessage %></div>
         <% } %>
     </div>
 

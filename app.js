@@ -5,7 +5,7 @@ const flash = require('connect-flash');
 const path = require('path');
 const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
-const dashboardRoute = require('./routes/dashboard'); // Import trasy dashboard
+const dashboardRoute = require('./routes/dashboard'); 
 
 const app = express();
 
@@ -42,7 +42,8 @@ app.use((req, res, next) => {
 // Trasy
 app.use('/register', registerRoute);
 app.use('/login', loginRoute);
-app.use('/dashboard', dashboardRoute); // Rejestracja trasy dashboard
+app.use('/dashboard', dashboardRoute);
+
 
 // Strona główna (przekierowanie na login)
 app.get('/', (req, res) => {
